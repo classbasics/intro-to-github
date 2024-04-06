@@ -1,0 +1,157 @@
+{
+  "name": "html from url to pdf to on-disk",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c5d65fc1-3d51-4d76-b971-8301ca2bc8ae",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        760,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/forms/chromium/convert/url",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "https://sparksuite.github.io/simple-html-invoice-template/"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4a70c64f-24c6-4675-b238-af2658e9454d",
+      "name": "HTTP Request: html from url to pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        960,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "$input.item.binary.data.fileName = 'myNewFilename.pdf'\n\nreturn $input.item;"
+      },
+      "id": "9b381d77-b619-4ca6-856e-943886e4b7ef",
+      "name": "Code1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/71c5b951-7e71-4e3e-9d88-f5cc1709cfec",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7630ef14-fee7-4373-91ab-f269bff90b57",
+      "name": "POST file1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1420,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/ubuntu/data/{{ $input.item.binary.data.fileName }}",
+        "options": {}
+      },
+      "id": "7550ca85-0f40-4bba-80f8-f528cbe8bb99",
+      "name": "Read/Write Files from Disk",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow takes an HTML file via a URL, converts it to a PDF file, changes the file name, then saves to disk. n8n on Node v18 (localhost;5678) on Ubuntu 22.04 desktop with Gutenberg on Docker localhost:3000\n\n\n\ndocker-compose.yml\nversion: \"3\"\n\nservices\n\n  gotenberg:\n    image: gotenberg/gotenberg:8\n    ports:\n      - \"3000:3000\"\n    command:\n      - \"gotenberg\"\n      - \"--api-port=3000\"\n      - \"--api-timeout=600s\"\n      - \"--chromium-ignore-certificate-errors=true\"\n      - \"--chromium-disable-web-security=false\"",
+        "height": 520
+      },
+      "id": "8a704ada-d2ce-411a-945a-351355169235",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        100
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: html from url to pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: html from url to pdf": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "08858954-d2f1-49a6-b773-11fcad63521c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "71e6240920414447a52757c9ea142d97721ddc6a53dae76a15fc24d578bb4692"
+  },
+  "id": "ulbPttA7nm2ROkCl",
+  "tags": []
+}
