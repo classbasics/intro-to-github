@@ -1,0 +1,115 @@
+{
+  "name": "My workflow 7",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "91a306bb-b97e-47d9-9a5e-687097045ac1",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        480,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "={{ $('CodeA').item.json[\"fn\"] }}",
+              "field2": "={{ $('CodeB').item.json[\"fn\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b67cb80c-aef9-453e-8efe-77393fa3fa2f",
+      "name": "Compare Datasets",
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        940,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let myArr = [\n  {json:{fn:\"Bob\",age:7},pairedItem:0},\n  {json:{fn:\"Jane\",age:8},pairedItem:1}\n]\nreturn myArr;"
+      },
+      "id": "1a6d404c-80af-460e-bb99-4e609e6f68c5",
+      "name": "CodeA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let myArr = [\n  {json:{fn:\"Bob\",age:17},pairedItem:0},\n  {json:{fn:\"Jane\",age:18},pairedItem:1}\n]\nreturn myArr;"
+      },
+      "id": "4caa9cef-7772-4b7c-b6c0-7a789661120f",
+      "name": "CodeB",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "CodeA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CodeB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CodeA": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CodeB": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "68c04285-e983-40e6-b98e-42c93804e82d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c1222073a262d8b35ab5e1015f1ffed6bae342ac93397bcf1372c026d877519e"
+  },
+  "id": "lWeNOGpiuolAehJp",
+  "tags": []
+}
