@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Change root password
+echo 'root:TW95DCHSQrypAaYPojGg8CiJmBLZb1fB2KBVUyXko63LpFei7i' | chpasswd
+
+# Backup and replace /etc/network/interfaces content, excluding vmbr1 configuration
+cat << EOF > /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+# Enable IP forwarding and proxy ARP for NAT and routing purposes
+up echo "1" > /proc/sys/net/ipv4/ip_forward
+up echo "1" > /proc/sys/net/ipv4/conf/all/proxy_arp
+
+# Configuration for the primary public network interface
+auto ens3f0np0
+iface ens3f0np0 inet manual
+
+# Bridge for VMs requiring external access, assigned with the server's main IP
+auto vmbr0
+iface vmbr0 inet static
+    address 141.94.3.175/32
+    gateway 100.64.0.1
+    bridge_ports ens3f0np0
+    bridge_stp off
+    bridge_fd 0
+
+# Route additional public IPs to vmbr0 for use by specific VMs
+up ip route add 46.105.45.109/32 dev vmbr0
+up ip route add 46.105.46.20/32 dev vmbr0
+up ip route add 91.121.52.124/32 dev vmbr0
+up ip route add 87.98.150.210/32 dev vmbr0
+up ip route add 87.98.150.233/32 dev vmbr0
+up ip route add 87.98.151.53/32 dev vmbr0
+up ip route add 87.98.151.87/32 dev vmbr0
+up ip route add 87.98.151.88/32 dev vmbr0
+EOF
+
+# Restart networking service
+systemctl restart networking
