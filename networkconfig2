@@ -34,6 +34,7 @@ up ip route add 87.98.150.233/32 dev vmbr0
 up ip route add 87.98.151.53/32 dev vmbr0
 up ip route add 87.98.151.87/32 dev vmbr0
 up ip route add 87.98.151.88/32 dev vmbr0
+up ip route add 91.121.33.17/32 dev vmbr0
 EOF
 
 # Restart networking service
