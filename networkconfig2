@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change root password
-echo 'root:TW95DCHSQrypAaYPojGg8CiJmBLZb1fB2KBVUyXko63LpFei7i' | chpasswd
+echo 'root:Password' | chpasswd
 
 # Backup and replace /etc/network/interfaces content, excluding vmbr1 configuration
 cat << EOF > /etc/network/interfaces
